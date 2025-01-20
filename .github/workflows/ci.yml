@@ -1,0 +1,39 @@
+name: ci-booking
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+env:
+  JAVA_VERSION: "21"
+
+jobs:
+  booking-app:
+    name: Booking App
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: "maven"
+          cache-dependency-path: "**/pom.xml"
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+
+      - name: Build
+        run: mvn -B clean package -DskipTests --no-transfer-progress
+
+      - name: Test
+        run: mvn -B clean test --no-transfer-progress
