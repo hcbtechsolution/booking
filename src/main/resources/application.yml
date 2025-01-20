@@ -1,0 +1,31 @@
+logging:
+  file:
+    name: ./booking.log
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - health
+        - info
+        - logfile
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: booking
+  
+  datasource:
+    url: jdbc:postgresql://postgresdb:5432/booking
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update # Can be changed to validate, create-drop, etc.
+    show-sql: false
